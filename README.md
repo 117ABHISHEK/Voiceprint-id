@@ -37,7 +37,7 @@ voiceprint-id/
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/voiceprint-id.git
+git clone https://github.com/your-117ABHISHEK/voiceprint-id.git
 cd voiceprint-id
 ```
 
