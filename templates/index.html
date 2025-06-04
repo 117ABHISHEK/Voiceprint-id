@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>🔐 VoicePrint ID</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    button { margin: 10px; padding: 10px 20px; }
+    input { padding: 8px; }
+    #output { white-space: pre-wrap; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h2>🔐 VoicePrint ID</h2>
+  <input type="text" id="username" placeholder="Enter Username" />
+  <br><br>
+  <button onclick="startRecording()">🎤 Start Recording</button>
+  <button onclick="stopRecording()">⏹ Stop</button>
+  <button onclick="sendToServer('register')">📥 Register</button>
+  <button onclick="sendToServer('verify')">🔍 Verify</button>
+
+  <p id="status"></p>
+  <pre id="output"></pre>
+
+  <script>
+    let mediaRecorder, audioChunks = [], audioBlob;
+
+    async function startRecording() {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorder = new MediaRecorder(stream);
+      audioChunks = [];
+
+      mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+      mediaRecorder.onstop = () => {
+        audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+      };
+
+      mediaRecorder.start();
+      document.getElementById('status').innerText = "Recording...";
+    }
+
+    function stopRecording() {
+      mediaRecorder.stop();
+      document.getElementById('status').innerText = "Recording stopped.";
+    }
+
+    async function sendToServer(endpoint) {
+      const username = document.getElementById('username').value;
+      if (!username || !audioBlob) return alert("Please enter username and record audio.");
+
+      const formData = new FormData();
+      formData.append('username', username);
+      formData.append('audio', audioBlob, 'voice.wav');
+
+      const response = await fetch(`/${endpoint}`, {
+        method: 'POST',
+        body: formData
+      });
+
+      const result = await response.json();
+      document.getElementById('output').innerText = JSON.stringify(result, null, 2);
+
+      if (result.authenticated) {
+        alert("✅ Verified! Access Granted");
+      } else if (result.authenticated === false) {
+        alert("❌ Access Denied. Try again.");
+      } else {
+        alert("ℹ️ " + (result.message || result.error));
+      }
+    }
+  </script>
+</body>
+</html>
