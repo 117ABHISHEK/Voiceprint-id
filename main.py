@@ -40,27 +40,6 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/user-info')
-def user_info():
-    try:
-        # Check for Replit authentication headers
-        user_id = request.headers.get('X-Replit-User-Id')
-        user_name = request.headers.get('X-Replit-User-Name')
-        user_roles = request.headers.get('X-Replit-User-Roles')
-        
-        if user_id and user_name:
-            return jsonify({
-                'authenticated': True,
-                'user_id': user_id,
-                'user_name': user_name,
-                'user_roles': user_roles
-            })
-        else:
-            return jsonify({'authenticated': False})
-    except Exception as e:
-        return jsonify({'authenticated': False, 'error': str(e)})</old_str>
-
-
 @app.route('/register', methods=['POST'])
 def register():
     try:

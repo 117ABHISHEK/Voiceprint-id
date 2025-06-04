@@ -1,433 +1,70 @@
-
 <!DOCTYPE html>
 <html>
 <head>
   <title>🔐 VoicePrint ID</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .container {
-      background: rgba(255, 255, 255, 0.95);
-      padding: 40px;
-      border-radius: 20px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-      backdrop-filter: blur(10px);
-      width: 90%;
-      max-width: 500px;
-      text-align: center;
-    }
-
-    h2 {
-      color: #333;
-      margin-bottom: 30px;
-      font-size: 2.5rem;
-      font-weight: 700;
-    }
-
-    .auth-section {
-      margin-bottom: 30px;
-      padding: 20px;
-      background: rgba(102, 126, 234, 0.1);
-      border-radius: 15px;
-      border: 2px dashed #667eea;
-    }
-
-    .auth-section h3 {
-      color: #667eea;
-      margin-bottom: 15px;
-      font-size: 1.2rem;
-    }
-
-    .user-info {
-      background: rgba(76, 175, 80, 0.1);
-      border: 2px solid #4caf50;
-      border-radius: 10px;
-      padding: 15px;
-      margin: 15px 0;
-    }
-
-    .user-info h4 {
-      color: #2e7d32;
-      margin-bottom: 10px;
-    }
-
-    .user-info p {
-      color: #388e3c;
-      font-weight: 500;
-    }
-
-    input[type="text"] {
-      width: 100%;
-      padding: 15px;
-      border: 2px solid #e0e0e0;
-      border-radius: 10px;
-      font-size: 16px;
-      margin-bottom: 20px;
-      transition: all 0.3s ease;
-      background: rgba(255, 255, 255, 0.9);
-    }
-
-    input[type="text"]:focus {
-      outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
-
-    .button-group {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
-      margin-bottom: 20px;
-    }
-
-    .action-buttons {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
-      margin-top: 20px;
-    }
-
-    button {
-      padding: 15px 20px;
-      border: none;
-      border-radius: 10px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .record-btn {
-      background: linear-gradient(45deg, #4caf50, #45a049);
-      color: white;
-    }
-
-    .record-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
-    }
-
-    .stop-btn {
-      background: linear-gradient(45deg, #f44336, #d32f2f);
-      color: white;
-    }
-
-    .stop-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(244, 67, 54, 0.3);
-    }
-
-    .register-btn {
-      background: linear-gradient(45deg, #2196f3, #1976d2);
-      color: white;
-    }
-
-    .register-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(33, 150, 243, 0.3);
-    }
-
-    .verify-btn {
-      background: linear-gradient(45deg, #ff9800, #f57c00);
-      color: white;
-    }
-
-    .verify-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(255, 152, 0, 0.3);
-    }
-
-    .auth-btn {
-      background: linear-gradient(45deg, #667eea, #764ba2);
-      color: white;
-      width: 100%;
-      margin: 10px 0;
-    }
-
-    .auth-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
-    }
-
-    .logout-btn {
-      background: linear-gradient(45deg, #6c757d, #495057);
-      color: white;
-      width: 100%;
-      margin-top: 15px;
-    }
-
-    .logout-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(108, 117, 125, 0.3);
-    }
-
-    #status {
-      margin: 20px 0;
-      padding: 15px;
-      border-radius: 10px;
-      font-weight: 600;
-      min-height: 20px;
-    }
-
-    .recording {
-      background: rgba(244, 67, 54, 0.1);
-      color: #d32f2f;
-      border: 2px solid #f44336;
-      animation: pulse 1.5s infinite;
-    }
-
-    .stopped {
-      background: rgba(76, 175, 80, 0.1);
-      color: #2e7d32;
-      border: 2px solid #4caf50;
-    }
-
-    @keyframes pulse {
-      0% { opacity: 1; }
-      50% { opacity: 0.5; }
-      100% { opacity: 1; }
-    }
-
-    #output {
-      background: #f8f9fa;
-      border: 2px solid #e9ecef;
-      border-radius: 10px;
-      padding: 20px;
-      margin-top: 20px;
-      white-space: pre-wrap;
-      font-family: 'Courier New', monospace;
-      font-size: 14px;
-      text-align: left;
-      max-height: 300px;
-      overflow-y: auto;
-    }
-
-    .success {
-      background: rgba(76, 175, 80, 0.1);
-      border-color: #4caf50;
-      color: #2e7d32;
-    }
-
-    .error {
-      background: rgba(244, 67, 54, 0.1);
-      border-color: #f44336;
-      color: #d32f2f;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .app-section {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 15px;
-      padding: 20px;
-      margin-top: 20px;
-    }
-
-    @media (max-width: 600px) {
-      .container {
-        padding: 20px;
-        margin: 20px;
-      }
-      
-      .button-group, .action-buttons {
-        grid-template-columns: 1fr;
-      }
-      
-      h2 {
-        font-size: 2rem;
-      }
-    }
+    body { font-family: sans-serif; padding: 20px; }
+    button { margin: 10px; padding: 10px 20px; }
+    input { padding: 8px; }
+    #output { white-space: pre-wrap; margin-top: 20px; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>🔐 VoicePrint ID</h2>
-    
-    <!-- Authentication Section -->
-    <div id="auth-section" class="auth-section">
-      <h3>🔒 Please authenticate to access VoicePrint ID</h3>
-      <p>You need to be logged in to use voice authentication features.</p>
-      <div>
-        <script
-          authed="location.reload()"
-          src="https://auth.util.repl.co/script.js"
-        ></script>
-      </div>
-    </div>
+  <h2>🔐 VoicePrint ID</h2>
+  <input type="text" id="username" placeholder="Enter Username" />
+  <br><br>
+  <button onclick="startRecording()">🎤 Start Recording</button>
+  <button onclick="stopRecording()">⏹ Stop</button>
+  <button onclick="sendToServer('register')">📥 Register</button>
+  <button onclick="sendToServer('verify')">🔍 Verify</button>
 
-    <!-- User Info Section (Hidden by default) -->
-    <div id="user-section" class="user-info hidden">
-      <h4>👋 Welcome back!</h4>
-      <p id="user-name">Loading user info...</p>
-      <button class="logout-btn" onclick="logout()">🚪 Logout</button>
-    </div>
-
-    <!-- Voice Authentication App (Hidden by default) -->
-    <div id="app-section" class="app-section hidden">
-      <input type="text" id="username" placeholder="Enter Username for Voice Authentication" />
-      
-      <div class="button-group">
-        <button class="record-btn" onclick="startRecording()">🎤 Start Recording</button>
-        <button class="stop-btn" onclick="stopRecording()">⏹ Stop</button>
-      </div>
-
-      <div class="action-buttons">
-        <button class="register-btn" onclick="sendToServer('register')">📥 Register Voice</button>
-        <button class="verify-btn" onclick="sendToServer('verify')">🔍 Verify Voice</button>
-      </div>
-
-      <p id="status"></p>
-      <pre id="output"></pre>
-    </div>
-  </div>
+  <p id="status"></p>
+  <pre id="output"></pre>
 
   <script>
     let mediaRecorder, audioChunks = [], audioBlob;
-    let isAuthenticated = false;
-
-    // Check authentication status on page load
-    window.onload = function() {
-      checkAuthStatus();
-    };
-
-    function checkAuthStatus() {
-      // Check if user is authenticated by making a request to get user info
-      fetch('/user-info')
-        .then(response => response.json())
-        .then(data => {
-          if (data.authenticated) {
-            showAuthenticatedView(data);
-          } else {
-            showLoginView();
-          }
-        })
-        .catch(() => {
-          showLoginView();
-        });
-    }
-
-    function showAuthenticatedView(userData) {
-      document.getElementById('auth-section').classList.add('hidden');
-      document.getElementById('user-section').classList.remove('hidden');
-      document.getElementById('app-section').classList.remove('hidden');
-      document.getElementById('user-name').textContent = `User: ${userData.user_name} (ID: ****)`;
-      isAuthenticated = true;
-    }
-
-    function showLoginView() {
-      document.getElementById('auth-section').classList.remove('hidden');
-      document.getElementById('user-section').classList.add('hidden');
-      document.getElementById('app-section').classList.add('hidden');
-      isAuthenticated = false;
-    }
-
-    function logout() {
-      // Clear any stored authentication and reload
-      document.cookie = "replit_authed=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-      location.reload();
-    }
 
     async function startRecording() {
-      if (!isAuthenticated) {
-        alert("Please log in first!");
-        return;
-      }
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorder = new MediaRecorder(stream);
+      audioChunks = [];
 
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        mediaRecorder = new MediaRecorder(stream);
-        audioChunks = [];
+      mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+      mediaRecorder.onstop = () => {
+        audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+      };
 
-        mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-        mediaRecorder.onstop = () => {
-          audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-          updateStatus("Recording stopped.", "stopped");
-        };
-
-        mediaRecorder.start();
-        updateStatus("🎙️ Recording... Speak now!", "recording");
-      } catch (error) {
-        alert("Error accessing microphone: " + error.message);
-      }
+      mediaRecorder.start();
+      document.getElementById('status').innerText = "Recording...";
     }
 
     function stopRecording() {
-      if (mediaRecorder && mediaRecorder.state === "recording") {
-        mediaRecorder.stop();
-        mediaRecorder.stream.getTracks().forEach(track => track.stop());
-      }
-    }
-
-    function updateStatus(message, type = "") {
-      const statusEl = document.getElementById('status');
-      statusEl.textContent = message;
-      statusEl.className = type;
+      mediaRecorder.stop();
+      document.getElementById('status').innerText = "Recording stopped.";
     }
 
     async function sendToServer(endpoint) {
-      if (!isAuthenticated) {
-        alert("Please log in first!");
-        return;
-      }
-
       const username = document.getElementById('username').value;
-      if (!username || !audioBlob) {
-        alert("Please enter username and record audio first.");
-        return;
-      }
+      if (!username || !audioBlob) return alert("Please enter username and record audio.");
 
       const formData = new FormData();
       formData.append('username', username);
       formData.append('audio', audioBlob, 'voice.wav');
 
-      try {
-        updateStatus("Processing...", "");
-        const response = await fetch(`/${endpoint}`, {
-          method: 'POST',
-          body: formData
-        });
+      const response = await fetch(`/${endpoint}`, {
+        method: 'POST',
+        body: formData
+      });
 
-        const result = await response.json();
-        
-        // Hide sensitive information in the display
-        const displayResult = { ...result };
-        if (displayResult.similarity) {
-          displayResult.similarity = "****";
-        }
-        
-        document.getElementById('output').textContent = JSON.stringify(displayResult, null, 2);
-        document.getElementById('output').className = result.error ? "error" : "success";
+      const result = await response.json();
+      document.getElementById('output').innerText = JSON.stringify(result, null, 2);
 
-        if (result.authenticated === true) {
-          alert("✅ Voice Verified! Access Granted");
-          updateStatus("✅ Authentication successful!", "stopped");
-        } else if (result.authenticated === false) {
-          alert("❌ Voice verification failed. Try again.");
-          updateStatus("❌ Authentication failed", "");
-        } else if (result.message) {
-          alert("ℹ️ " + result.message);
-          updateStatus(result.message, result.error ? "" : "stopped");
-        }
-      } catch (error) {
-        alert("Error: " + error.message);
-        updateStatus("Error occurred", "");
+      if (result.authenticated) {
+        alert("✅ Verified! Access Granted");
+      } else if (result.authenticated === false) {
+        alert("❌ Access Denied. Try again.");
+      } else {
+        alert("ℹ️ " + (result.message || result.error));
       }
     }
   </script>
