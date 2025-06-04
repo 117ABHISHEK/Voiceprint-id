@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, send_from_directory
 from flask_cors import CORS
 import os, uuid, json, traceback
 import numpy as np
@@ -15,6 +15,12 @@ if not os.path.exists(DB_FILE):
     with open(DB_FILE, 'w') as f:
         json.dump({}, f)
 
+
+
+
+@app.route('/static/<path:filename>')
+def static_files(filename):
+    return send_from_directory('static', filename)
 
 def load_db():
     try:
