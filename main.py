@@ -87,7 +87,7 @@ def verify():
         return jsonify({
             'username': username,
             'similarity': round(float(similarity), 3),
-            'authenticated': similarity >= 0.8  # ✅ Only sent, not saved
+            'authenticated': bool(similarity >= 0.8)  # Convert numpy bool to Python bool
         })
     except Exception as e:
         traceback.print_exc()
